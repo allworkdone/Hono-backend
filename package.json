@@ -1,0 +1,23 @@
+{
+  "name": "hono-mongo-project",
+  "module": "src/app.js",
+  "version": "1.0.0",
+  "description": "A backend project using Hono and MongoDB",
+  "type": "module",
+
+  "scripts": {
+    "dev": "bun src/app.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "hono": "^4.6.13",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.11.0"
+  }
+}
