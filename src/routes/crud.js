@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { getDB } from '../db';
 import { authMiddleware } from '../middleware/authMiddleware';
+import { ObjectId } from 'mongodb';
 
 const crud = new Hono();
 
@@ -28,11 +29,24 @@ crud.post('/items', async (ctx) => {
 crud.get('/items/:id', async (ctx) => {
     const db = getDB();
     const id = ctx.req.param('id');
-    const item = await db.collection('items').findOne({ _id: new ObjectId(id) });
 
-    if (!item) return ctx.text('Item not found', 404);
-    return ctx.json(item);
+    // Validate if the id is a valid ObjectId
+    if (!ObjectId.isValid(id)) {
+        return ctx.json({ message: 'Invalid ID format' }, 400);
+    }
+
+    try {
+        const item = await db.collection('items').findOne({ _id: new ObjectId(id) });
+        if (!item) {
+            return ctx.json({ message: 'Item not found' }, 404);
+        }
+        return ctx.json(item, 200);
+    } catch (error) {
+        return ctx.json({ message: 'Server Error' }, 500);
+    }
 });
+
+
 
 crud.put('/items/:id', async (ctx) => {
     const db = getDB();
